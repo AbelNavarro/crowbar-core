@@ -107,8 +107,8 @@ class NetworkService < ServiceObject
 
       if found
         net_info["address"] = address.to_s
-        db["allocated_by_name"][name] = { "machine" => name, "interface" => net_info["conduit"], "address" => address.to_s }
-        db["allocated"][address.to_s] = { "machine" => name, "interface" => net_info["conduit"], "address" => address.to_s }
+        db["allocated_by_name"][name] = { "interface" => net_info["conduit"], "address" => address.to_s }
+        db["allocated"][address.to_s] = { "fqdn" => name, "interface" => net_info["conduit"] }
         db.save
       end
     rescue Exception => e
