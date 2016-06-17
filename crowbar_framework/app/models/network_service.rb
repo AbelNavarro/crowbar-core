@@ -90,7 +90,7 @@ class NetworkService < ServiceObject
         # Did we already allocate this, but the node lose it?
         unless db["allocated_by_name"][name].nil?
           found = true
-          address = db["allocated_by_name"][name]["address"]
+          address = db["allocated_by_name"][name]["address"].first
         end
       end
 
@@ -107,7 +107,10 @@ class NetworkService < ServiceObject
 
       if found
         net_info["address"] = address.to_s
-        db["allocated_by_name"][name] = { "interface" => net_info["conduit"], "address" => address.to_s }
+        db["allocated_by_name"][name] = {
+          "interface" => net_info["conduit"],
+          "address" => (db["allocated_by_name"][name]["address"] ||= []) << address.to_s
+        }
         db["allocated"][address.to_s] = { "fqdn" => name, "interface" => net_info["conduit"] }
         db.save
       end
