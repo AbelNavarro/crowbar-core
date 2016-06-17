@@ -241,6 +241,12 @@ class NetworkService < ServiceObject
     false
   end
 
+  def virtual_ip_assigned_count(bc_instance, network, range, name)
+    db = Chef::DataBag.load("crowbar/#{network}_network") rescue nil
+    return 0 if db["allocated_by_name"][name].nil?
+    db["allocated_by_name"][name]["address"].size
+  end
+
   def create_proposal
     @logger.debug("Network create_proposal: entering")
     base = super
